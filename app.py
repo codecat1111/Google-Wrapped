@@ -1,82 +1,3 @@
-"""
-from flask import Flask, jsonify, render_template
-import pandas as pd
-import json
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
-import io
-import base64
-
-app = Flask(__name__)
-
-# Load the cleaned data (assuming it is saved in a JSON file)
-df = pd.read_json('cleaned_browser_history.json')
-
-# Route for the homepage
-
-
-@app.route('/')
-def index():
-    # The frontend page you created
-    return render_template('GoogleWrapped.html')
-
-# API to get top sites
-
-
-@app.route('/api/top-sites')
-def top_sites():
-    top_sites = df['url'].value_counts().head(5).to_dict()
-    return jsonify(top_sites)
-
-# API to get daily visits
-
-
-@app.route('/api/daily-visits')
-def daily_visits():
-    daily_visits_count = df.groupby(df['date_time'].dt.date).size().to_dict()
-    return jsonify({'daily_visits': daily_visits_count})
-
-
-# API to get monthly visits
-
-
-@app.route('/api/monthly-visits')
-def monthly_visits():
-    monthly_visits_count = df.groupby(
-        df['date_time'].dt.to_period('M')).size().to_dict()
-    return jsonify({'monthly_visits': monthly_visits_count})
-
-
-# API to get daily visits data for plotting
-
-
-@app.route('/api/daily-visits-chart')
-def daily_visits_chart():
-    daily_visits = df.groupby(df['date_time'].dt.date).size().to_dict()
-    return jsonify(daily_visits)
-
-# API to generate word cloud
-
-
-@app.route('/api/wordcloud')
-def wordcloud():
-    text = " ".join(df['title'].dropna())
-    wordcloud = WordCloud(width=800, height=400,
-                          background_color='white').generate(text)
-
-    # Convert the wordcloud to an image
-    img = io.BytesIO()
-    wordcloud.to_image().save(img, format='PNG')
-    img.seek(0)
-    img_base64 = base64.b64encode(img.getvalue()).decode('utf-8')
-
-    return jsonify({'wordcloud': img_base64})
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
-"""
 from flask import Flask, jsonify, render_template
 import pandas as pd
 import datetime
@@ -94,7 +15,7 @@ df = pd.read_json('cleaned_browser_history.json')
 
 # Route for the homepage
 API_URL = "https://api.linkpreview.net"
-API_KEY = "c5db24f2c761ef7ecaf4db02de82de19"
+API_KEY = "MY_API_KEY"
 
 
 @app.route('/')
