@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browser Fingerprinting</title>
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      #fingerprint {
+        margin-top: 20px;
+      }
+      .info {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Detailed Browser Fingerprint Example</h1>
+    <div id="fingerprint"></div>
+
+    <script>
+      // Load the FingerprintJS library
+      FingerprintJS.load()
+        .then((fp) => {
+          // Get the visitor's fingerprint details
+          fp.get()
+            .then((result) => {
+              // Extract useful data from the fingerprint result
+              const visitorId = result.visitorId;
+              const components = result.components;
+
+              // Use safe navigation to check if components are available
+              const screenResolution = components.screenResolution
+                ? `${components.screenResolution.value[0]} x ${components.screenResolution.value[1]}`
+                : "Unknown";
+              const os = components.platform
+                ? components.platform.value
+                : "Unknown";
+              const browser = components.userAgent
+                ? components.userAgent.value
+                : "Unknown";
+              const deviceMemory = components.deviceMemory
+                ? components.deviceMemory.value + " GB"
+                : "Unknown";
+
+              // Display details in the browser
+              document.getElementById("fingerprint").innerHTML = `
+          <div class="info"><strong>Browser Fingerprint (Hash):</strong> ${visitorId}</div>
+          <div class="info"><strong>Operating System:</strong> ${os}</div>
+          <div class="info"><strong>Browser:</strong> ${browser}</div>
+          <div class="info"><strong>Screen Resolution:</strong> ${screenResolution}</div>
+          <div class="info"><strong>Device Memory:</strong> ${deviceMemory}</div>
+        `;
+
+              // Log full fingerprint details in the console
+              console.log("Full fingerprint data:", result);
+            })
+            .catch((error) => {
+              console.error("Error getting fingerprint:", error);
+            });
+        })
+        .catch((error) => {
+          console.error("Error loading FingerprintJS:", error);
+        });
+    </script>
+  </body>
+</html>
