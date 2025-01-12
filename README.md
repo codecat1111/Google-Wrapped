@@ -72,7 +72,7 @@ To use this application, you'll need your Google data. Follow these steps to exp
   ```bash
   python app.py
   ```
-7. **Open http://127.0.0.1:5000 in your browser to view the app.**
+7. **Open localhost in your browser to view the app.**
 
 ## API Calls:
 
